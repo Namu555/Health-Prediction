@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — PatientManager{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Page header -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
+    <div>
+      <h1 class="h3 fw-bold mb-1">
+        <i class="bi bi-speedometer2 pm-teal me-2"></i>Dashboard
+      </h1>
+      <p class="text-muted mb-0">Welcome back, <strong>{{ current_user.full_name }}</strong></p>
+    </div>
+    <a href="{{ url_for('patients.add_patient') }}" class="btn pm-btn-primary">
+      <i class="bi bi-person-plus me-2"></i>Add Patient
+    </a>
+  </div>
+
+  <!-- Stats cards -->
+  <div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+      <div class="pm-stat-card p-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="pm-stat-number">{{ total }}</div>
+            <div class="text-muted small fw-medium">Total Patients</div>
+          </div>
+          <div class="pm-stat-icon">
+            <i class="bi bi-people-fill"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="pm-stat-card pm-stat-card--green p-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="pm-stat-number">{{ recent|length }}</div>
+            <div class="text-muted small fw-medium">Recent (Today)</div>
+          </div>
+          <div class="pm-stat-icon pm-stat-icon--green">
+            <i class="bi bi-calendar-check-fill"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="pm-stat-card pm-stat-card--blue p-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="pm-stat-number">AI</div>
+            <div class="text-muted small fw-medium">Insights Active</div>
+          </div>
+          <div class="pm-stat-icon pm-stat-icon--blue">
+            <i class="bi bi-stars"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="pm-stat-card pm-stat-card--purple p-4">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="pm-stat-number">CSV</div>
+            <div class="text-muted small fw-medium">Export Ready</div>
+          </div>
+          <div class="pm-stat-icon pm-stat-icon--purple">
+            <i class="bi bi-file-earmark-spreadsheet-fill"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Recent Patients -->
+    <div class="col-lg-8">
+      <div class="pm-card p-0">
+        <div class="pm-card-header d-flex align-items-center justify-content-between px-4 py-3">
+          <h2 class="h6 fw-bold mb-0">
+            <i class="bi bi-clock-history pm-teal me-2"></i>Recent Patients
+          </h2>
+          <a href="{{ url_for('patients.list_patients') }}" class="btn btn-sm pm-btn-outline-sm">
+            View All
+          </a>
+        </div>
+        {% if recent %}
+          <div class="table-responsive">
+            <table class="table pm-table mb-0">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Glucose</th>
+                  <th>Added</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for p in recent %}
+                <tr>
+                  <td class="fw-medium">{{ p.full_name }}</td>
+                  <td class="text-muted small">{{ p.email }}</td>
+                  <td>
+                    <span class="badge {% if p.glucose > 100 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                      {{ p.glucose }} mg/dL
+                    </span>
+                  </td>
+                  <td class="text-muted small">{{ p.created_at.strftime('%b %d') }}</td>
+                  <td>
+                    <a href="{{ url_for('patients.detail', patient_id=p.id) }}"
+                       class="btn btn-sm pm-btn-icon" title="View patient">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          {% with title="No patients yet", message="Add your first patient to get started.",
+                  action_url=url_for('patients.add_patient'), action_label="Add First Patient" %}
+            {% include "partials/empty_state.html" %}
+          {% endwith %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+      <div class="pm-card p-4">
+        <h2 class="h6 fw-bold mb-3">
+          <i class="bi bi-lightning-fill pm-teal me-2"></i>Quick Actions
+        </h2>
+        <div class="d-grid gap-2">
+          <a href="{{ url_for('patients.add_patient') }}"
+             class="btn pm-btn-primary text-start">
+            <i class="bi bi-person-plus me-2"></i>Add New Patient
+          </a>
+          <a href="{{ url_for('patients.list_patients') }}"
+             class="btn pm-btn-secondary text-start">
+            <i class="bi bi-search me-2"></i>Search Patients
+          </a>
+          <a href="{{ url_for('patients.export_csv') }}"
+             class="btn pm-btn-secondary text-start">
+            <i class="bi bi-download me-2"></i>Export to CSV
+          </a>
+          <a href="{{ url_for('main.account') }}"
+             class="btn pm-btn-secondary text-start">
+            <i class="bi bi-person-gear me-2"></i>Account Settings
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

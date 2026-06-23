@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Create Account — PatientManager{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+      <div class="pm-auth-card p-4 p-md-5">
+        <div class="text-center mb-4">
+          <div class="pm-auth-icon mb-3">
+            <i class="bi bi-person-plus-fill"></i>
+          </div>
+          <h1 class="h3 fw-bold">Create your account</h1>
+          <p class="text-muted">Start managing patients in minutes</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.register') }}"
+              novalidate id="registerForm" class="needs-validation">
+          {{ form.hidden_tag() }}
+
+          <!-- Full Name -->
+          <div class="mb-3">
+            {{ form.full_name.label(class="form-label fw-medium") }}
+            {{ form.full_name(class="form-control pm-input" + (" is-invalid" if form.full_name.errors else ""),
+               placeholder="Dr. Jane Smith",
+               id="full_name",
+               minlength="2", maxlength="100", required=True) }}
+            {% for err in form.full_name.errors %}
+              <div class="invalid-feedback">{{ err }}</div>
+            {% endfor %}
+            <div class="invalid-feedback">Please enter your full name (2–100 characters).</div>
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            {{ form.email.label(class="form-label fw-medium") }}
+            {{ form.email(class="form-control pm-input" + (" is-invalid" if form.email.errors else ""),
+               placeholder="jane@clinic.com",
+               id="email",
+               maxlength="255", required=True) }}
+            {% for err in form.email.errors %}
+              <div class="invalid-feedback">{{ err }}</div>
+            {% endfor %}
+            <div class="invalid-feedback">Please enter a valid email address.</div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            {{ form.password.label(class="form-label fw-medium") }}
+            <div class="input-group">
+              {{ form.password(class="form-control pm-input" + (" is-invalid" if form.password.errors else ""),
+                 placeholder="Minimum 8 characters",
+                 id="password",
+                 minlength="8", required=True) }}
+              <button class="btn btn-outline-secondary pm-pw-toggle"
+                      type="button" data-target="password" title="Toggle password">
+                <i class="bi bi-eye"></i>
+              </button>
+              {% for err in form.password.errors %}
+                <div class="invalid-feedback">{{ err }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="mb-4">
+            {{ form.confirm_password.label(class="form-label fw-medium") }}
+            <div class="input-group">
+              {{ form.confirm_password(class="form-control pm-input" + (" is-invalid" if form.confirm_password.errors else ""),
+                 placeholder="Repeat password",
+                 id="confirm_password",
+                 required=True) }}
+              <button class="btn btn-outline-secondary pm-pw-toggle"
+                      type="button" data-target="confirm_password" title="Toggle password">
+                <i class="bi bi-eye"></i>
+              </button>
+              {% for err in form.confirm_password.errors %}
+                <div class="invalid-feedback">{{ err }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <button type="submit" class="btn pm-btn-primary w-100 pm-submit-btn" id="registerSubmit">
+            <span class="pm-btn-text"><i class="bi bi-person-check me-2"></i>Create Account</span>
+            <span class="pm-btn-spinner d-none">
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>Creating…
+            </span>
+          </button>
+        </form>
+
+        <p class="text-center mt-4 mb-0 text-muted">
+          Already have an account?
+          <a href="{{ url_for('auth.login') }}" class="pm-link fw-medium">Sign in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

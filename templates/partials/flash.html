@@ -1,0 +1,14 @@
+{% if get_flashed_messages() %}
+<div class="container mt-3" id="flash-container">
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+      {% if category == 'success' %}<i class="bi bi-check-circle-fill"></i>
+      {% elif category == 'danger' %}<i class="bi bi-exclamation-triangle-fill"></i>
+      {% elif category == 'warning' %}<i class="bi bi-exclamation-circle-fill"></i>
+      {% else %}<i class="bi bi-info-circle-fill"></i>{% endif %}
+      <span>{{ message }}</span>
+      <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}

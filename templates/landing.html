@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}PatientManager — Secure Health Record Management{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="pm-hero py-5">
+  <div class="container">
+    <div class="row align-items-center min-vh-75 py-5">
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <span class="badge pm-badge-teal mb-3 px-3 py-2 fs-6">
+          <i class="bi bi-shield-check me-1"></i>HIPAA-Ready Design
+        </span>
+        <h1 class="display-4 fw-bold mb-4 pm-hero-title">
+          Modern Patient<br />
+          <span class="pm-gradient-text">Record Management</span>
+        </h1>
+        <p class="lead text-muted mb-5">
+          Securely store, search, and analyse patient health records with
+          AI-powered clinical insights. Built for healthcare professionals
+          who demand speed and reliability.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{{ url_for('auth.register') }}"
+             class="btn pm-btn-primary btn-lg px-4">
+            <i class="bi bi-rocket-takeoff me-2"></i>Get Started Free
+          </a>
+          <a href="{{ url_for('auth.login') }}"
+             class="btn pm-btn-outline btn-lg px-4">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="pm-hero-card mx-auto">
+          <div class="pm-hero-card-inner p-4">
+            <div class="d-flex align-items-center mb-4">
+              <div class="pm-avatar me-3">JD</div>
+              <div>
+                <div class="fw-semibold">John Doe</div>
+                <small class="text-muted">Age 52 · Last visit today</small>
+              </div>
+              <span class="badge bg-success ms-auto">Reviewed</span>
+            </div>
+            <div class="row g-3 mb-4">
+              <div class="col-4">
+                <div class="pm-metric-card text-center p-2">
+                  <div class="pm-metric-value text-warning">142</div>
+                  <div class="pm-metric-label">Glucose</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="pm-metric-card text-center p-2">
+                  <div class="pm-metric-value text-success">13.8</div>
+                  <div class="pm-metric-label">Haemoglobin</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="pm-metric-card text-center p-2">
+                  <div class="pm-metric-value text-danger">215</div>
+                  <div class="pm-metric-label">Cholesterol</div>
+                </div>
+              </div>
+            </div>
+            <div class="pm-ai-box p-3 rounded">
+              <div class="d-flex align-items-center mb-2">
+                <i class="bi bi-stars pm-teal me-2"></i>
+                <span class="fw-semibold small">AI Clinical Assessment</span>
+              </div>
+              <p class="small text-muted mb-0">
+                Elevated glucose suggests pre-diabetic range. Borderline
+                cholesterol warrants dietary review and lipid panel follow-up…
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 pm-features-bg">
+  <div class="container py-3">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Everything you need to manage patients</h2>
+      <p class="text-muted">Purpose-built for clinical workflows</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="pm-feature-card p-4 h-100">
+          <div class="pm-feature-icon mb-3"><i class="bi bi-shield-lock-fill"></i></div>
+          <h5 class="fw-bold">Secure by Default</h5>
+          <p class="text-muted mb-0">Per-user data isolation, CSRF protection,
+          hashed passwords, and secure session management out of the box.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="pm-feature-card p-4 h-100">
+          <div class="pm-feature-icon mb-3"><i class="bi bi-stars"></i></div>
+          <h5 class="fw-bold">AI Clinical Insights</h5>
+          <p class="text-muted mb-0">Automatically generate lab assessments
+          using Gemini AI — flagging abnormal values and suggesting follow-ups.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="pm-feature-card p-4 h-100">
+          <div class="pm-feature-icon mb-3"><i class="bi bi-search"></i></div>
+          <h5 class="fw-bold">Fast Search & Export</h5>
+          <p class="text-muted mb-0">Full-text search across names and emails,
+          paginated results, and one-click CSV export for reporting.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 pm-cta-section text-center text-white">
+  <div class="container py-3">
+    <h2 class="fw-bold mb-3">Ready to streamline your practice?</h2>
+    <p class="lead mb-4 opacity-75">Join healthcare professionals using PatientManager.</p>
+    <a href="{{ url_for('auth.register') }}"
+       class="btn btn-light btn-lg px-5 fw-semibold pm-btn-cta">
+      <i class="bi bi-person-plus me-2"></i>Create Free Account
+    </a>
+  </div>
+</section>
+{% endblock %}

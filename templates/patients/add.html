@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Add Patient — PatientManager{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb pm-breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('patients.list_patients') }}">Patients</a></li>
+          <li class="breadcrumb-item active">Add Patient</li>
+        </ol>
+      </nav>
+
+      <div class="mb-4">
+        <h1 class="h3 fw-bold mb-1">
+          <i class="bi bi-person-plus pm-teal me-2"></i>Add New Patient
+        </h1>
+        <p class="text-muted">AI clinical remarks will be generated automatically.</p>
+      </div>
+
+      <div class="pm-card p-4 p-md-5">
+        <form method="POST" action="{{ url_for('patients.add_patient') }}"
+              novalidate id="patientForm" class="needs-validation">
+          {{ form.hidden_tag() }}
+          {% set today = today %}
+          {% include "patients/_form_fields.html" %}
+
+          <div class="d-flex gap-2 mt-4 pt-2 border-top">
+            <button type="submit" class="btn pm-btn-primary pm-submit-btn" id="addPatientSubmit">
+              <span class="pm-btn-text">
+                <i class="bi bi-stars me-2"></i>Save & Generate AI Remarks
+              </span>
+              <span class="pm-btn-spinner d-none">
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Generating AI remarks…
+              </span>
+            </button>
+            <a href="{{ url_for('patients.list_patients') }}" class="btn pm-btn-secondary">
+              Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Inject today's date for DOB max constraint
+  document.getElementById('date_of_birth').max = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

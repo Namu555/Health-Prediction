@@ -1,0 +1,86 @@
+{# Reusable patient form partial #}
+<div class="row g-3">
+
+  <!-- Full Name -->
+  <div class="col-12">
+    {{ form.full_name.label(class="form-label fw-medium") }}
+    {{ form.full_name(class="form-control pm-input" + (" is-invalid" if form.full_name.errors else ""),
+       id="full_name", minlength="2", maxlength="100", required=True,
+       placeholder="e.g. John Smith") }}
+    {% for err in form.full_name.errors %}
+      <div class="invalid-feedback">{{ err }}</div>
+    {% endfor %}
+    <div class="invalid-feedback">Full name must be 2–100 characters.</div>
+  </div>
+
+  <!-- DOB -->
+  <div class="col-md-6">
+    {{ form.date_of_birth.label(class="form-label fw-medium") }}
+    {{ form.date_of_birth(class="form-control pm-input" + (" is-invalid" if form.date_of_birth.errors else ""),
+       id="date_of_birth", required=True,
+       min="1900-01-02",
+       max=today) }}
+    {% for err in form.date_of_birth.errors %}
+      <div class="invalid-feedback">{{ err }}</div>
+    {% endfor %}
+    <div class="invalid-feedback">Date of birth is required (after 1900-01-01 and not in the future).</div>
+  </div>
+
+  <!-- Email -->
+  <div class="col-md-6">
+    {{ form.email.label(class="form-label fw-medium") }}
+    {{ form.email(class="form-control pm-input" + (" is-invalid" if form.email.errors else ""),
+       id="patient_email", maxlength="255", required=True,
+       placeholder="patient@example.com") }}
+    {% for err in form.email.errors %}
+      <div class="invalid-feedback">{{ err }}</div>
+    {% endfor %}
+    <div class="invalid-feedback">Please enter a valid email (max 255 characters).</div>
+  </div>
+
+  <!-- Glucose -->
+  <div class="col-md-4">
+    <label class="form-label fw-medium" for="glucose">
+      Glucose <small class="text-muted">(mg/dL, 20–800)</small>
+    </label>
+    {{ form.glucose(class="form-control pm-input" + (" is-invalid" if form.glucose.errors else ""),
+       id="glucose", required=True,
+       min="20", max="800", step="0.1",
+       placeholder="e.g. 95.0") }}
+    {% for err in form.glucose.errors %}
+      <div class="invalid-feedback">{{ err }}</div>
+    {% endfor %}
+    <div class="invalid-feedback">Glucose must be between 20 and 800 mg/dL.</div>
+  </div>
+
+  <!-- Haemoglobin -->
+  <div class="col-md-4">
+    <label class="form-label fw-medium" for="haemoglobin">
+      Haemoglobin <small class="text-muted">(g/dL, 2–25)</small>
+    </label>
+    {{ form.haemoglobin(class="form-control pm-input" + (" is-invalid" if form.haemoglobin.errors else ""),
+       id="haemoglobin", required=True,
+       min="2", max="25", step="0.1",
+       placeholder="e.g. 13.5") }}
+    {% for err in form.haemoglobin.errors %}
+      <div class="invalid-feedback">{{ err }}</div>
+    {% endfor %}
+    <div class="invalid-feedback">Haemoglobin must be between 2 and 25 g/dL.</div>
+  </div>
+
+  <!-- Cholesterol -->
+  <div class="col-md-4">
+    <label class="form-label fw-medium" for="cholesterol">
+      Cholesterol <small class="text-muted">(mg/dL, 50–500)</small>
+    </label>
+    {{ form.cholesterol(class="form-control pm-input" + (" is-invalid" if form.cholesterol.errors else ""),
+       id="cholesterol", required=True,
+       min="50", max="500", step="0.1",
+       placeholder="e.g. 180.0") }}
+    {% for err in form.cholesterol.errors %}
+      <div class="invalid-feedback">{{ err }}</div>
+    {% endfor %}
+    <div class="invalid-feedback">Cholesterol must be between 50 and 500 mg/dL.</div>
+  </div>
+
+</div>

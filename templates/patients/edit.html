@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Edit {{ patient.full_name }} — PatientManager{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb pm-breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('patients.list_patients') }}">Patients</a></li>
+          <li class="breadcrumb-item">
+            <a href="{{ url_for('patients.detail', patient_id=patient.id) }}">{{ patient.full_name }}</a>
+          </li>
+          <li class="breadcrumb-item active">Edit</li>
+        </ol>
+      </nav>
+
+      <div class="mb-4">
+        <h1 class="h3 fw-bold mb-1">
+          <i class="bi bi-pencil-square pm-teal me-2"></i>Edit Patient
+        </h1>
+        <p class="text-muted">Changes will trigger a fresh AI assessment.</p>
+      </div>
+
+      <div class="pm-card p-4 p-md-5">
+        <form method="POST" action="{{ url_for('patients.edit_patient', patient_id=patient.id) }}"
+              novalidate id="patientForm" class="needs-validation">
+          {{ form.hidden_tag() }}
+          {% include "patients/_form_fields.html" %}
+
+          <div class="d-flex gap-2 mt-4 pt-2 border-top">
+            <button type="submit" class="btn pm-btn-primary pm-submit-btn" id="editPatientSubmit">
+              <span class="pm-btn-text">
+                <i class="bi bi-floppy me-2"></i>Update & Regenerate AI
+              </span>
+              <span class="pm-btn-spinner d-none">
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Updating…
+              </span>
+            </button>
+            <a href="{{ url_for('patients.detail', patient_id=patient.id) }}"
+               class="btn pm-btn-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.getElementById('date_of_birth').max = new Date().toISOString().split('T')[0];
+</script>
+{% endblock %}

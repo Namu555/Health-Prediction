@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Sign In — PatientManager{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5 col-lg-4">
+      <div class="pm-auth-card p-4 p-md-5">
+        <div class="text-center mb-4">
+          <div class="pm-auth-icon mb-3">
+            <i class="bi bi-heart-pulse-fill"></i>
+          </div>
+          <h1 class="h3 fw-bold">Welcome back</h1>
+          <p class="text-muted">Sign in to your account</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('auth.login') }}"
+              novalidate id="loginForm" class="needs-validation">
+          {{ form.hidden_tag() }}
+
+          <!-- Email -->
+          <div class="mb-3">
+            {{ form.email.label(class="form-label fw-medium") }}
+            {{ form.email(class="form-control pm-input" + (" is-invalid" if form.email.errors else ""),
+               placeholder="you@clinic.com",
+               id="email",
+               required=True) }}
+            {% for err in form.email.errors %}
+              <div class="invalid-feedback">{{ err }}</div>
+            {% endfor %}
+            <div class="invalid-feedback">Please enter your email address.</div>
+          </div>
+
+          <!-- Password -->
+          <div class="mb-4">
+            {{ form.password.label(class="form-label fw-medium") }}
+            <div class="input-group">
+              {{ form.password(class="form-control pm-input" + (" is-invalid" if form.password.errors else ""),
+                 placeholder="Your password",
+                 id="password",
+                 required=True) }}
+              <button class="btn btn-outline-secondary pm-pw-toggle"
+                      type="button" data-target="password" title="Toggle password">
+                <i class="bi bi-eye"></i>
+              </button>
+              {% for err in form.password.errors %}
+                <div class="invalid-feedback">{{ err }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <button type="submit" class="btn pm-btn-primary w-100 pm-submit-btn" id="loginSubmit">
+            <span class="pm-btn-text"><i class="bi bi-box-arrow-in-right me-2"></i>Sign In</span>
+            <span class="pm-btn-spinner d-none">
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>Signing in…
+            </span>
+          </button>
+        </form>
+
+        <p class="text-center mt-4 mb-0 text-muted">
+          Don't have an account?
+          <a href="{{ url_for('auth.register') }}" class="pm-link fw-medium">Register here</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

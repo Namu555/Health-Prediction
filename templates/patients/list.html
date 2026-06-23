@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block title %}Patients — PatientManager{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
+    <div>
+      <h1 class="h3 fw-bold mb-1">
+        <i class="bi bi-people-fill pm-teal me-2"></i>Patients
+      </h1>
+      <p class="text-muted mb-0">{{ pagination.total }} total record{{ 's' if pagination.total != 1 }}</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('patients.export_csv') }}" class="btn pm-btn-secondary" title="Export CSV">
+        <i class="bi bi-download me-1"></i>Export CSV
+      </a>
+      <a href="{{ url_for('patients.add_patient') }}" class="btn pm-btn-primary">
+        <i class="bi bi-person-plus me-1"></i>Add Patient
+      </a>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="pm-card p-3 mb-4">
+    <form method="GET" action="{{ url_for('patients.list_patients') }}" class="d-flex gap-2">
+      <div class="flex-grow-1">
+        <input type="search" name="q" value="{{ q }}"
+               class="form-control pm-input"
+               placeholder="Search by name or email…"
+               id="patientSearch"
+               aria-label="Search patients" />
+      </div>
+      <button type="submit" class="btn pm-btn-primary px-4">
+        <i class="bi bi-search"></i>
+      </button>
+      {% if q %}
+        <a href="{{ url_for('patients.list_patients') }}" class="btn pm-btn-secondary">
+          <i class="bi bi-x-lg"></i>
+        </a>
+      {% endif %}
+    </form>
+  </div>
+
+  <!-- Patient table -->
+  {% if patients %}
+    <div class="pm-card p-0 mb-4">
+      <div class="table-responsive">
+        <table class="table pm-table mb-0">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>DOB</th>
+              <th>Glucose</th>
+              <th>Hb</th>
+              <th>Cholesterol</th>
+              <th>Added</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in patients %}
+            <tr>
+              <td class="fw-medium">
+                <a href="{{ url_for('patients.detail', patient_id=p.id) }}"
+                   class="pm-link text-decoration-none">{{ p.full_name }}</a>
+              </td>
+              <td class="text-muted small">{{ p.email }}</td>
+              <td class="text-muted small">{{ p.date_of_birth.strftime('%Y-%m-%d') }}</td>
+              <td>
+                <span class="badge {% if p.glucose > 100 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                  {{ p.glucose }}
+                </span>
+              </td>
+              <td>
+                <span class="badge {% if p.haemoglobin < 12 or p.haemoglobin > 17 %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                  {{ p.haemoglobin }}
+                </span>
+              </td>
+              <td>
+                <span class="badge {% if p.cholesterol > 200 %}bg-danger{% else %}bg-success{% endif %}">
+                  {{ p.cholesterol }}
+                </span>
+              </td>
+              <td class="text-muted small">{{ p.created_at.strftime('%b %d, %Y') }}</td>
+              <td class="text-center">
+                <div class="d-flex justify-content-center gap-1">
+                  <a href="{{ url_for('patients.detail', patient_id=p.id) }}"
+                     class="btn btn-sm pm-btn-icon" title="View">
+                    <i class="bi bi-eye"></i>
+                  </a>
+                  <a href="{{ url_for('patients.edit_patient', patient_id=p.id) }}"
+                     class="btn btn-sm pm-btn-icon" title="Edit">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <button type="button"
+                          class="btn btn-sm pm-btn-icon-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#deleteModal"
+                          data-patient-id="{{ p.id }}"
+                          data-patient-name="{{ p.full_name }}"
+                          title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if pagination.pages > 1 %}
+      <nav aria-label="Patient pagination">
+        <ul class="pagination justify-content-center pm-pagination">
+          <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('patients.list_patients', page=pagination.prev_num, q=q) }}">
+              <i class="bi bi-chevron-left"></i>
+            </a>
+          </li>
+          {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if page_num %}
+              <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('patients.list_patients', page=page_num, q=q) }}">
+                  {{ page_num }}
+                </a>
+              </li>
+            {% else %}
+              <li class="page-item disabled"><span class="page-link">…</span></li>
+            {% endif %}
+          {% endfor %}
+          <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+            <a class="page-link" href="{{ url_for('patients.list_patients', page=pagination.next_num, q=q) }}">
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    {% endif %}
+
+  {% else %}
+    {% if q %}
+      {% with title="No results found", message="No patients matched your search. Try a different name or email." %}
+        {% include "partials/empty_state.html" %}
+      {% endwith %}
+    {% else %}
+      {% with title="No patients yet",
+              message="Start by adding your first patient record.",
+              action_url=url_for('patients.add_patient'),
+              action_label="Add First Patient" %}
+        {% include "partials/empty_state.html" %}
+      {% endwith %}
+    {% endif %}
+  {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content pm-modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold text-danger" id="deleteModalLabel">
+          <i class="bi bi-trash me-2"></i>Delete Patient
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="deletePatientName"></strong>?
+        This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn pm-btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <form id="deleteForm" method="POST" action="">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash me-1"></i>Delete Patient
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Wire up delete modal with patient data
+  document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
+    const btn = event.relatedTarget;
+    const patientId = btn.getAttribute('data-patient-id');
+    const patientName = btn.getAttribute('data-patient-name');
+    document.getElementById('deletePatientName').textContent = patientName;
+    document.getElementById('deleteForm').action = '/patients/' + patientId + '/delete';
+  });
+</script>
+{% endblock %}

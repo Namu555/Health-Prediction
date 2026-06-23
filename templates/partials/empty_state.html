@@ -1,0 +1,12 @@
+<div class="text-center py-5 pm-empty-state">
+  <div class="pm-empty-icon mb-3">
+    <i class="bi bi-clipboard-x"></i>
+  </div>
+  <h5 class="fw-semibold">{{ title|default('No records found') }}</h5>
+  <p class="text-muted mb-4">{{ message|default('There are no items to display yet.') }}</p>
+  {% if action_url and action_label %}
+    <a href="{{ action_url }}" class="btn pm-btn-primary">
+      <i class="bi bi-plus-lg me-1"></i>{{ action_label }}
+    </a>
+  {% endif %}
+</div>
